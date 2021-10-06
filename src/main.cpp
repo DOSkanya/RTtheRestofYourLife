@@ -3,6 +3,7 @@
 #include "color.h"
 #include "camera.h"
 #include "sphere.h"
+#include "triangle.h"
 #include "material.h"
 #include "hittable_list.h"
 #include "moving_sphere.h"
@@ -117,6 +118,7 @@ hittable_list cornell_box() {
 
 	auto red = make_shared<lambertian>(color(.65, .05, .05));
 	auto white = make_shared<lambertian>(color(.73, .73, .73));
+	auto t_white = make_shared<t_lambertian>(color(.73, .73, .73));
 	auto green = make_shared<lambertian>(color(.12, .45, .15));
 	auto light = make_shared<diffuse_light>(color(15, 15, 15));
 
@@ -138,9 +140,37 @@ hittable_list cornell_box() {
 	box2 = make_shared<rotate_y>(box2, -18);
 	box2 = make_shared<translate>(box2, vec3(130, 0, 65));
 	objects.add(box2);*/
+
 	auto glass = make_shared<dielectric>(1.5);
-	objects.add(make_shared<sphere>(point3(190, 90, 190), 90, glass));
+	//objects.add(make_shared<sphere>(point3(190, 90, 190), 90, glass));
+
+	point3 v0(82.5, 185, 82.5);
+	point3 v1(0, 20, 0);
+	point3 v2(165, 20, 0);
+	point3 v3(0, 20, 165);
+	point3 v4(165, 20, 165);
+	shared_ptr<hittable> pyramid_0 = make_shared<triangle>(v0, v1, v2, white);
+	pyramid_0 = make_shared<rotate_y>(pyramid_0, -18);
+	pyramid_0 = make_shared<translate>(pyramid_0, vec3(130, 0, 65));
+	shared_ptr<hittable> pyramid_1 = make_shared<triangle>(v0, v1, v3, white);
+	pyramid_1 = make_shared<rotate_y>(pyramid_1, -18);
+	pyramid_1 = make_shared<translate>(pyramid_1, vec3(130, 0, 65));
+	shared_ptr<hittable> pyramid_2 = make_shared<triangle>(v0, v3, v4, white);
+	pyramid_2 = make_shared<rotate_y>(pyramid_2, -18);
+	pyramid_2 = make_shared<translate>(pyramid_2, vec3(130, 0, 65));
+	shared_ptr<hittable> pyramid_3 = make_shared<triangle>(v0, v2, v4, white);
+	pyramid_3 = make_shared<rotate_y>(pyramid_3, -18);
+	pyramid_3 = make_shared<translate>(pyramid_3, vec3(130, 0, 65));
+	shared_ptr<hittable> pyramid_4 = make_shared<xz_rect>(0, 165, 0, 165, 0, white);
+	pyramid_4 = make_shared<rotate_y>(pyramid_4, -18);
+	pyramid_4 = make_shared<translate>(pyramid_4, vec3(130, 0, 65));
 	
+	objects.add(pyramid_0);
+	objects.add(pyramid_1);
+	objects.add(pyramid_2);
+	objects.add(pyramid_3);
+	objects.add(pyramid_4);
+
 	return objects;
 }
 
@@ -228,13 +258,40 @@ hittable_list final_scene() {
 hittable_list test() {
 	hittable_list objects;
 
-	auto light = make_shared<diffuse_light>(color(7, 7, 7));
-	objects.add(make_shared<xz_rect>(123, 423, 147, 412, 554, light));
+	auto red = make_shared<lambertian>(color(.65, .05, .05));
+	auto white = make_shared<lambertian>(color(.73, .73, .73));
+	auto t_white = make_shared<t_lambertian>(color(.73, .73, .73));
+	auto green = make_shared<lambertian>(color(.12, .45, .15));
+	auto light = make_shared<diffuse_light>(color(15, 15, 15));
 
-	auto center1 = point3(400, 400, 200);
-	auto center2 = center1 + vec3(30, 0, 0);
-	auto moving_sphere_material = make_shared<lambertian>(color(0.7, 0.3, 0.1));
-	objects.add(make_shared<moving_sphere>(center1, center2, 0, 1, 50, moving_sphere_material));
+	objects.add(make_shared<flip_face>(make_shared<xz_rect>(213, 343, 227, 332, 554, light)));
+
+	point3 v0(82.5, 185, 82.5);
+	point3 v1(0, 20, 0);
+	point3 v2(165, 20, 0);
+	point3 v3(0, 20, 165);
+	point3 v4(165, 20, 165);
+	shared_ptr<hittable> pyramid_0 = make_shared<triangle>(v0, v1, v2, t_white);
+	pyramid_0 = make_shared<rotate_y>(pyramid_0, -18);
+	pyramid_0 = make_shared<translate>(pyramid_0, vec3(130, 0, 65));
+	shared_ptr<hittable> pyramid_1 = make_shared<triangle>(v0, v1, v3, t_white);
+	pyramid_1 = make_shared<rotate_y>(pyramid_1, -18);
+	pyramid_1 = make_shared<translate>(pyramid_1, vec3(130, 0, 65));
+	shared_ptr<hittable> pyramid_2 = make_shared<triangle>(v0, v3, v4, t_white);
+	pyramid_2 = make_shared<rotate_y>(pyramid_2, -18);
+	pyramid_2 = make_shared<translate>(pyramid_2, vec3(130, 0, 65));
+	shared_ptr<hittable> pyramid_3 = make_shared<triangle>(v0, v2, v4, t_white);
+	pyramid_3 = make_shared<rotate_y>(pyramid_3, -18);
+	pyramid_3 = make_shared<translate>(pyramid_3, vec3(130, 0, 65));
+	shared_ptr<hittable> pyramid_4 = make_shared<xz_rect>(0, 165, 0, 165, 0, white);
+	pyramid_4 = make_shared<rotate_y>(pyramid_4, -18);
+	pyramid_4 = make_shared<translate>(pyramid_4, vec3(130, 0, 65));
+
+	objects.add(pyramid_0);
+	objects.add(pyramid_1);
+	objects.add(pyramid_2);
+	objects.add(pyramid_3);
+	objects.add(pyramid_4);
 
 	return objects;
 }
@@ -261,7 +318,7 @@ int main() {
 	//Special
 	shared_ptr<hittable_list> lights = make_shared<hittable_list>();
 
-	switch (6) {
+	switch (9) {
 		case 1 :
 			world = random_scene();
 			background = color(0.70, 0.80, 1.00);
@@ -307,11 +364,10 @@ int main() {
 		case 6:
 			world = cornell_box();
 			lights->add(make_shared<xz_rect>(213, 343, 227, 332, 554, shared_ptr<material>()));
-			lights->add(make_shared<sphere>(point3(190, 90, 190), 90, shared_ptr<material>()));
 			aspect_ratio = 1.0 / 1.0;
 			image_width = 600;
 			image_height = static_cast<int>(image_width / aspect_ratio);
-			samples_per_pixel = 1000;
+			samples_per_pixel = 100;
 			background = color(0.0, 0.0, 0.0);
 			lookfrom = point3(278, 278, -800);
 			lookat = point3(278, 278, 0);
@@ -344,12 +400,13 @@ int main() {
 
 		case 9:
 			world = test();
-			aspect_ratio = 1.0;
-			image_width = 400;
+			lights->add(make_shared<xz_rect>(213, 343, 227, 332, 554, shared_ptr<material>()));
+			aspect_ratio = 1.0 / 1.0;
+			image_width = 600;
 			image_height = static_cast<int>(image_width / aspect_ratio);
 			samples_per_pixel = 100;
-			background = color(0, 0, 0);
-			lookfrom = point3(478, 278, -600);
+			background = color(0.0, 0.0, 0.0);
+			lookfrom = point3(278, 278, -800);
 			lookat = point3(278, 278, 0);
 			vfov = 40.0;
 			break;
