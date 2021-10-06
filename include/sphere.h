@@ -80,5 +80,6 @@ vec3 sphere::random(const point3& o) const {
 	auto distance_squared = direction.length_squared();
 	onb uvw;
 	uvw.build_from_w(direction);
+	std::cout << "called" << std::endl;
 	return uvw.local(random_to_sphere(radius, distance_squared));
 }

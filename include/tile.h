@@ -14,7 +14,7 @@ color ray_color(const ray& r, const color& background, const bvh_node& bvh, shar
 
 	//If we've exceeded the ray bounce limit, no more light is gathered.
 	if (depth <= 0)
-		return color(0, 0, 0);
+		return color(0.0, 0.0, 0.0);
 
 	if (!bvh.hit(r, 0.001, infinity, rec))
 		return background;
